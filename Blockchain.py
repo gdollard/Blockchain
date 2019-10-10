@@ -48,7 +48,8 @@ def create_some_blocks():
     # create come blocks
     counter = 0
     while counter < 9:
-        chain.add_block('SampleBlock_' + counter)
+        chain.add_block('SampleBlock_' + str(counter))
+        counter += 1
 
     print(chain.get_size())
     chain.print_all_blocks()
