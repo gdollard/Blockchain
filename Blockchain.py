@@ -42,18 +42,19 @@ class Blockchain:
         return self.genesis
 
 
-def createSomeBlocks():
+def create_some_blocks():
     chain = Blockchain();
-    chain.add_block('bla');
-    chain.add_block('bla 2');
-    chain.add_block('bla 3');
-    chain.add_block('bla 4');
 
-    print(chain.get_size());
-    chain.print_all_blocks();
+    # create come blocks
+    counter = 0
+    while counter < 9:
+        chain.add_block('SampleBlock_' + counter)
+
+    print(chain.get_size())
+    chain.print_all_blocks()
 
 
-createSomeBlocks();
+create_some_blocks()
 
 
 
