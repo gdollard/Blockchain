@@ -7,9 +7,9 @@ class Blockchain:
     target = 2 ** (256-diff);
 
     def __init__(self):
-        self.genesis = Block('Genesis', 0)
+        self.size = 0
+        self.genesis = Block('Genesis', self.size)
         self.head = self.genesis
-        self.size = 1
 
     # Adds a block to the blockchain and sets it as the head block
     def add_block(self, data):
@@ -21,10 +21,12 @@ class Blockchain:
         while current_block.next is not None:
             current_block = current_block.get_next_block()
         current_block.set_next_block(new_block)
+        new_block.set_previous_hash(current_block.get_hash())
 
     def get_size(self):
         return self.size
 
+    # Utility funtion to print out all the blocks and their details
     def print_all_blocks(self):
         blocks = []
         current_block = self.genesis
@@ -34,8 +36,10 @@ class Blockchain:
             blocks.append(current_block)
         for x in blocks:
             print("-----------------------------------------")
-            print(x.get_data())
-            print(x.get_hash())
+            print("Block Data: " + x.get_data())
+            print("Block No: " + str(x.get_block_no()))
+            print("Hash: " + x.get_hash())
+            print("Previous Hash: " + str(x.get_previous_hash()))
         print("================================================")
 
     def get_genesis(self):

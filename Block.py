@@ -29,6 +29,15 @@ class Block:
     def set_data(self, block_data):
         self.data = block_data;
 
+    def set_previous_hash(self, hash):
+        self.previous_hash = hash
+
+    def get_previous_hash(self):
+        return self.previous_hash
+
+    def get_block_no(self):
+        return self.blockNo
+
     # make a string of nonce, data, previous_hash and blockNo and return it as a hash
     def set_hash(self):
         the_hasher = hashlib.sha256()
