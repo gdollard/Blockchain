@@ -26,7 +26,7 @@ class Blockchain:
     def get_size(self):
         return self.size
 
-    # Utility funtion to print out all the blocks and their details
+    # Utility function to print out all the blocks and their details
     def print_all_blocks(self):
         blocks = []
         current_block = self.genesis
@@ -40,7 +40,11 @@ class Blockchain:
             print("Block No: " + str(x.get_block_no()))
             print("Hash: " + x.get_hash())
             print("Previous Hash: " + str(x.get_previous_hash()))
-        print("================================================")
+            if x.get_next_block() is not None:
+                print("Next block: " + x.get_next_block().get_data())
+            else:
+                print("Next block: - ")
+            print("================================================")
 
     def get_genesis(self):
         return self.genesis
