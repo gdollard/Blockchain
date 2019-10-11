@@ -1,5 +1,7 @@
 from Block import Block
 
+# Author: G. Dollard
+# Distributed Ledger Technology - Lab 1
 
 class Blockchain:
     diff = 20; # difficulty in mining

@@ -1,6 +1,8 @@
 import datetime
 import hashlib
 
+# Author: G. Dollard
+# Distributed Ledger Technology - Lab 1
 
 # A class to represent a block in the blockchain
 class Block:
