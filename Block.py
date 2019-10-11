@@ -12,12 +12,13 @@ class Block:
     hash = None
     nonce = 0
     previous_hash=0x0
-    timestamp = datetime.datetime.now()
+    timestamp = None
 
     def __init__(self, data, block_number):
         self.data = data
         self.set_hash();
         self.blockNo = block_number
+        self.timestamp = datetime.datetime.now()
 
     def get_next_block(self):
         return self.next;
@@ -40,11 +41,15 @@ class Block:
     def get_block_no(self):
         return self.blockNo
 
+    def get_creation_date(self):
+        return self.timestamp
+
     # make a string of nonce, data, previous_hash and blockNo and return it as a hash
     def set_hash(self):
         the_hasher = hashlib.sha256()
         the_hasher.update(self.data.encode('utf-8'))
-        #the_hasher.update()
+        the_hasher.update(str(self.blockNo).encode('utf-8'))
+        the_hasher.update(str(self.timestamp).encode('utf-8'))
         self.hash = the_hasher.hexdigest()
         # self.hash = hashlib.sha256(self.blockNo + self.nonce + self.data + self.previous_hash + self.blockNo).hexdigest()
 

@@ -33,6 +33,7 @@ class Blockchain:
         blocks = []
         current_block = self.genesis
         blocks.append(current_block)
+        print('\n')
         print("Printing details for " + str(self.get_size()))
         while current_block.next is not None:
             current_block = current_block.next
@@ -40,13 +41,14 @@ class Blockchain:
         for x in blocks:
             print("Block Data: " + x.get_data())
             print("Block No: " + str(x.get_block_no()))
+            print("Creation Date: " + str(x.get_creation_date()))
             print("Hash: " + x.get_hash())
             print("Previous Hash: " + str(x.get_previous_hash()))
             if x.get_next_block() is not None:
                 print("Next block: " + x.get_next_block().get_data())
             else:
                 print("Next block: - ")
-            print("================================================")
+            print("====================================================================")
 
     def get_genesis(self):
         return self.genesis
