@@ -25,6 +25,11 @@ class Blockchain:
         current_block.set_next_block(new_block)
         new_block.set_previous_hash(current_block.get_hash())
 
+    # Just delegating to add_block for now
+    def mine(self, data):
+        self.add_block(data)
+
+
     def get_size(self):
         return self.size
 
