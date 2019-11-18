@@ -17,9 +17,9 @@ class Block:
 
     def __init__(self, data, block_number):
         self.data = data
-        self.set_hash();
         self.blockNo = block_number
         self.timestamp = datetime.datetime.now()
+        self.set_hash()
 
     def get_next_block(self):
         return self.next;

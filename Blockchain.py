@@ -18,7 +18,7 @@ class Blockchain:
     def add_block(self, data):
         self.size += 1
         new_block = Block(data, self.size)
-        new_block.set_hash()
+        #new_block.set_hash()
         current_block = self.head
 
         while current_block.next is not None:
@@ -78,15 +78,16 @@ def create_some_blocks():
         chain.add_block('SampleBlock_' + str(counter))
         counter += 1
 
-    chain.print_all_blocks()
     return chain
 
 def validate_blocks(blockchain):
     valiator = ChainValidation()
     valiator.head_check(blockchain)
+    valiator.integrity_check(blockchain)
 
 the_blockchain = create_some_blocks()
 validate_blocks(the_blockchain)
+the_blockchain.print_all_blocks()
 
 
 
