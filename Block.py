@@ -52,7 +52,6 @@ class Block:
         the_hasher.update(str(self.blockNo).encode('utf-8'))
         the_hasher.update(str(self.timestamp).encode('utf-8'))
         self.hash = the_hasher.hexdigest()
-        # self.hash = hashlib.sha256(self.blockNo + self.nonce + self.data + self.previous_hash + self.blockNo).hexdigest()
 
     def get_hash(self):
         return self.hash

@@ -1,4 +1,8 @@
 .idea/workspace.xml
 *.zip
-*.cpython*
-
+*.log
+*.pot
+*.pyc
+*/*/*/__pycache__/
+*/*/__pycache__/
+*/__pycache__/
