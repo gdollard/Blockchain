@@ -1,6 +1,7 @@
 import datetime
 import hashlib
 
+
 # Author: G. Dollard
 # Distributed Ledger Technology - Lab 1
 
@@ -11,7 +12,7 @@ class Block:
     next = None
     hash = None
     nonce = 0
-    previous_hash=0x0
+    previous_hash = 0x0
     timestamp = None
 
     def __init__(self, data, block_number):
@@ -55,9 +56,3 @@ class Block:
 
     def get_hash(self):
         return self.hash
-
-
-
-
-
-

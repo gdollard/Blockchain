@@ -1,4 +1,5 @@
 from Block import Block
+from ChainValidation import ChainValidation
 
 # Author: G. Dollard
 # Distributed Ledger Technology - Lab 1
@@ -15,7 +16,7 @@ class Blockchain:
 
     # Adds a block to the blockchain and sets it as the head block
     def add_block(self, data):
-        self.size += 1;
+        self.size += 1
         new_block = Block(data, self.size)
         new_block.set_hash()
         current_block = self.head
@@ -55,12 +56,21 @@ class Blockchain:
                 print("Next block: - ")
             print("====================================================================")
 
+    def get_all_blocks(self):
+        blocks = []
+        current_block = self.genesis
+        blocks.append(current_block)
+        while current_block.next is not None:
+            current_block = current_block.next
+            blocks.append(current_block)
+        return blocks
+
     def get_genesis(self):
         return self.genesis
 
-
+# Create some blocks and return the entire blockchain
 def create_some_blocks():
-    chain = Blockchain();
+    chain = Blockchain()
 
     # create come blocks
     counter = 0
@@ -69,9 +79,14 @@ def create_some_blocks():
         counter += 1
 
     chain.print_all_blocks()
+    return chain
 
+def validate_blocks(blockchain):
+    valiator = ChainValidation()
+    valiator.head_check(blockchain)
 
-create_some_blocks()
+the_blockchain = create_some_blocks()
+validate_blocks(the_blockchain)
 
 
 
