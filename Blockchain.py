@@ -1,46 +1,37 @@
 from Block import Block
 from ChainValidation import ChainValidation
 
+
 # Author: G. Dollard
 # Distributed Ledger Technology - Lab 1
 
 class Blockchain:
-    diff = 20; # difficulty in mining
+    diff = 20;  # difficulty in mining
     maxNonce = 2 ** 32;
-    target = 2 ** (256-diff);
-
-    def __init__(self):
-        self.size = 0
-        self.genesis = Block('Genesis', self.size)
-        self.head = self.genesis
+    target = 2 ** (256 - diff);
+    block = Block('Genesis')
+    root = head = block  # linked list thing
 
     # Adds a block to the blockchain and sets it as the head block
-    def add_block(self, data):
-        self.size += 1
-        new_block = Block(data, self.size)
-        #new_block.set_hash()
-        current_block = self.head
-
-        while current_block.next is not None:
-            current_block = current_block.get_next_block()
-        current_block.set_next_block(new_block)
-        new_block.set_previous_hash(current_block.get_hash())
+    def add_block(self, block):
+        block.previous_hash = self.block.hash
+        block.blockNo = self.block.blockNo + 1
+        self.block.next = block
+        self.block = self.block.next
 
     # Just delegating to add_block for now
-    def mine(self, data):
-        self.add_block(data)
-
-
-    def get_size(self):
-        return self.size
+    def mine(self, block):
+        for n in range(self.maxNonce):
+            self.add_block(block)
+            break # break for now, until we have the mine function written
 
     # Utility function to print out all the blocks and their details
     def print_all_blocks(self):
         blocks = []
-        current_block = self.genesis
+        current_block = self.root
         blocks.append(current_block)
         print('\n')
-        print("Printing details for " + str(self.get_size()))
+        print("--- Blocks --- ")
         while current_block.next is not None:
             current_block = current_block.next
             blocks.append(current_block)
@@ -58,15 +49,13 @@ class Blockchain:
 
     def get_all_blocks(self):
         blocks = []
-        current_block = self.genesis
+        current_block = self.block
         blocks.append(current_block)
         while current_block.next is not None:
             current_block = current_block.next
             blocks.append(current_block)
         return blocks
 
-    def get_genesis(self):
-        return self.genesis
 
 # Create some blocks and return the entire blockchain
 def create_some_blocks():
@@ -75,20 +64,18 @@ def create_some_blocks():
     # create come blocks
     counter = 0
     while counter < 9:
-        chain.add_block('SampleBlock_' + str(counter))
+        block = Block('SampleBlock_' + str(counter))
+        chain.mine(block)
         counter += 1
-
     return chain
+
 
 def validate_blocks(blockchain):
     valiator = ChainValidation()
     valiator.head_check(blockchain)
     valiator.integrity_check(blockchain)
 
+
 the_blockchain = create_some_blocks()
 validate_blocks(the_blockchain)
 the_blockchain.print_all_blocks()
-
-
-
-

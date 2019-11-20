@@ -15,9 +15,8 @@ class Block:
     previous_hash = 0x0
     timestamp = None
 
-    def __init__(self, data, block_number):
+    def __init__(self, data):
         self.data = data
-        self.blockNo = block_number
         self.timestamp = datetime.datetime.now()
         self.set_hash()
 
