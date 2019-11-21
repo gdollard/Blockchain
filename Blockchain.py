@@ -6,7 +6,7 @@ from ChainValidation import ChainValidation
 # Distributed Ledger Technology - Lab 1
 
 class Blockchain:
-    diff = 1;  # difficulty in mining
+    diff = 20;  # difficulty in mining
     maxNonce = 2 ** 32;
     target = 2 ** (256 - diff);
     block = Block('Genesis')
@@ -21,11 +21,10 @@ class Blockchain:
 
     # Just delegating to add_block for now
     def mine(self, block):
-        print("Mining block: " + block.data)
         for n in range(self.maxNonce):
             if int(block.gen_hash(), 16) <= self.target:
                 self.add_block(block)
-                print("Block Mined...")
+                print("Block " + block.data + " successfully mine. It took " + str(block.nonce) + " hashes to mine.")
                 break # break for now, until we have the mine function written
             else:
                 block.nonce += 1
@@ -36,7 +35,7 @@ class Blockchain:
         current_block = self.root
         blocks.append(current_block)
         print('\n')
-        print("--- Blocks --- ")
+        print("--- Printout Blocks --- ")
         while current_block.next is not None:
             current_block = current_block.next
             blocks.append(current_block)
@@ -78,7 +77,7 @@ def create_some_blocks():
 def validate_blocks(blockchain):
     valiator = ChainValidation()
     valiator.head_check(blockchain)
-    valiator.integrity_check(blockchain)
+    valiator.integrity_check_new(blockchain)
 
 
 the_blockchain = create_some_blocks()

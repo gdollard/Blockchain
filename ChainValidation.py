@@ -18,22 +18,26 @@ class ChainValidation:
         if all_clear:
             print("--- All blocks are properly linked ---")
 
-    # calculate the gen_hash indepdently and verify it against the stored gen_hash
-    def integrity_check(self, blockchain_to_check):
-        all_clear = True
+    # This function will dynamically generate the hash for the current block and will compare it
+    # to the previous_hash value of the block ahead
+    def integrity_check_new(self, blockchain_to_check):
+        print("==== Dynamically checking block hash integrity with previous hash ====")
         blocks = blockchain_to_check.get_all_blocks()
-        print("======= Checking Integrity of Blocks and Data =======")
+        invalid_blocks = 0
         for block in blocks:
-            the_hasher = hashlib.sha256()
-            the_hasher.update(str(block.nonce).encode('utf-8'))
-            the_hasher.update(block.data.encode('utf-8'))
-            the_hasher.update(str(block.previous_hash).encode('utf-8'))
-            the_hasher.update(str(block.blockNo).encode('utf-8'))
-            the_hasher.update(str(block.timestamp).encode('utf-8'))
-            hash = the_hasher.hexdigest()
-
-            if hash != block.gen_hash():
-                print("Block: " + block.data + " has been tampered with since its inital creation, gen_hash does not re-compute")
-                all_clear = False
-        if all_clear:
-            print("--- Blockchain is not tampered ---")
+            if block.next is not None:
+                the_hasher = hashlib.sha256()
+                the_hasher.update(str(block.nonce).encode('utf-8'))
+                the_hasher.update(block.data.encode('utf-8'))
+                the_hasher.update(str(block.previous_hash).encode('utf-8'))
+                the_hasher.update(str(block.blockNo).encode('utf-8'))
+                the_hasher.update(str(block.timestamp).encode('utf-8'))
+                hash = the_hasher.hexdigest()
+                if hash != block.next.previous_hash:
+                    print("Block integrity check failure for: " + block.data)
+                    invalid_blocks += 1
+        if invalid_blocks > 0:
+            print("The chain has integrity issues, please see messages for details.")
+        else:
+            print("Blockchain Integrity is good.")
+        print("==== Integrity check complete ====")
