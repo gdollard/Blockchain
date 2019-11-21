@@ -38,4 +38,4 @@ class Block:
         the_hasher.update(str(self.previous_hash).encode('utf-8'))
         the_hasher.update(str(self.blockNo).encode('utf-8'))
         the_hasher.update(str(self.timestamp).encode('utf-8'))
-        return  the_hasher.hexdigest()
+        return the_hasher.hexdigest()
