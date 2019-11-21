@@ -12,7 +12,7 @@ def hash_this_with_date(data_to_hash, useDate=False):
     return the_hasher.hexdigest()
 
 
-# Function that asks the user for data to hash and prints out both the hash with date and without
+# Function that asks the user for data to gen_hash and prints out both the gen_hash with date and without
 def initiate_hashing():
     user_data = input("Enter data to generate the Hash Value:")
     returned_hash_with_date = hash_this_with_date(user_data, True)

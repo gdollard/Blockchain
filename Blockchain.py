@@ -6,7 +6,7 @@ from ChainValidation import ChainValidation
 # Distributed Ledger Technology - Lab 1
 
 class Blockchain:
-    diff = 20;  # difficulty in mining
+    diff = 1;  # difficulty in mining
     maxNonce = 2 ** 32;
     target = 2 ** (256 - diff);
     block = Block('Genesis')
@@ -14,16 +14,21 @@ class Blockchain:
 
     # Adds a block to the blockchain and sets it as the head block
     def add_block(self, block):
-        block.previous_hash = self.block.hash
+        block.previous_hash = self.block.gen_hash()
         block.blockNo = self.block.blockNo + 1
         self.block.next = block
         self.block = self.block.next
 
     # Just delegating to add_block for now
     def mine(self, block):
+        print("Mining block: " + block.data)
         for n in range(self.maxNonce):
-            self.add_block(block)
-            break # break for now, until we have the mine function written
+            if int(block.gen_hash(), 16) <= self.target:
+                self.add_block(block)
+                print("Block Mined...")
+                break # break for now, until we have the mine function written
+            else:
+                block.nonce += 1
 
     # Utility function to print out all the blocks and their details
     def print_all_blocks(self):
@@ -36,20 +41,20 @@ class Blockchain:
             current_block = current_block.next
             blocks.append(current_block)
         for x in blocks:
-            print("Block Data: " + x.get_data())
-            print("Block No: " + str(x.get_block_no()))
-            print("Creation Date: " + str(x.get_creation_date()))
-            print("Hash: " + x.get_hash())
-            print("Previous Hash: " + str(x.get_previous_hash()))
+            print("Block Data: " + x.data)
+            print("Block No: " + str(x.blockNo))
+            print("Creation Date: " + str(x.timestamp))
+            print("Hash: " + x.gen_hash())
+            print("Previous Hash: " + str(x.previous_hash))
             if x.get_next_block() is not None:
-                print("Next block: " + x.get_next_block().get_data())
+                print("Next block: " + x.get_next_block().data)
             else:
                 print("Next block: - ")
             print("====================================================================")
 
     def get_all_blocks(self):
         blocks = []
-        current_block = self.block
+        current_block = self.root
         blocks.append(current_block)
         while current_block.next is not None:
             current_block = current_block.next
