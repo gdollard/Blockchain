@@ -20,7 +20,7 @@ class ChainValidation:
 
     # This function will dynamically generate the hash for the current block and will compare it
     # to the previous_hash value of the block ahead
-    def integrity_check_new(self, blockchain_to_check):
+    def integrity_check(self, blockchain_to_check):
         print("==== Dynamically checking block hash integrity with previous hash ====")
         blocks = blockchain_to_check.get_all_blocks()
         invalid_blocks = 0

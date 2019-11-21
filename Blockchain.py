@@ -6,7 +6,7 @@ from ChainValidation import ChainValidation
 # Distributed Ledger Technology - Lab 1
 
 class Blockchain:
-    diff = 20;  # difficulty in mining
+    diff = 3;  # difficulty in mining
     maxNonce = 2 ** 32;
     target = 2 ** (256 - diff);
     block = Block('Genesis')
@@ -77,7 +77,7 @@ def create_some_blocks():
 def validate_blocks(blockchain):
     valiator = ChainValidation()
     valiator.head_check(blockchain)
-    valiator.integrity_check_new(blockchain)
+    valiator.integrity_check(blockchain)
 
 
 the_blockchain = create_some_blocks()
