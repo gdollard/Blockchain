@@ -49,6 +49,9 @@ def bla():
     node1 = Node(5)
     node2 = Node(10)
     nodes = [node1, node2]
+
+    need to update the random number gen to ensure any number from the size of my_list can be generated
+
     common_toss = get_common_toss(nodes, nodes[0].coin_toss())
     while common_toss < 0:
         common_toss = get_common_toss(nodes, nodes[0].coin_toss())
