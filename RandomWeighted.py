@@ -14,10 +14,10 @@ class RandomWeighted:
                 return initial_value
 
 
-x = [1, 2, 3, 4]
-node1 = Node(5)
-node2 = Node(10)
-nodes = [node1, node2]
+#x = [1, 2, 3, 4]
+#node1 = Node(5)
+#node2 = Node(10)
+#nodes = [node1, node2]
 
 
 def addition(array):
@@ -37,28 +37,27 @@ def get_common_toss(nodes_array, value):
             print("Match found, continue")
             get_common_toss(nodes_array[1:], value)
         else:
-            print("No match found")
             return -1
         return value
 
 
 # print(addition(x))
-common_toss = get_common_toss(nodes, nodes[0].coin_toss())
-while common_toss < 0:
-    common_toss = get_common_toss(nodes, nodes[0].coin_toss())
 
-print("What do I have?: " + str(common_toss))
+
 def bla():
     main = RandomWeighted()
     node1 = Node(5)
     node2 = Node(10)
-
     nodes = [node1, node2]
-    coin_toss = main.run_coin_toss(nodes)
-    if (coin_toss >= 0):
+    common_toss = get_common_toss(nodes, nodes[0].coin_toss())
+    while common_toss < 0:
+        common_toss = get_common_toss(nodes, nodes[0].coin_toss())
+
+    if common_toss >= 0:
+        # create a list of tokens, the greater the stake a node has the greater the number of tokens it has
         my_list = ['A'] * node1.stake + ['B'] * node2.stake
-        print("Selected Leader is: " + my_list[coin_toss])
+        print("Selected Leader is: " + my_list[common_toss])
     else:
         print("No coin toss value agreeed..")
 
-# bla()
+bla()

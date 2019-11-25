@@ -9,5 +9,7 @@ class Node:
 
     # the purpose of this is to randomly generate a number and keep going until all nodes produce the same number
     def coin_toss(self):
-        return int(random.random() * 10)
+        tossed = int(random.random() * 10)
+        print("tossed: ", tossed)
+        return tossed
 
