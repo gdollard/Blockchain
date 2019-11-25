@@ -11,6 +11,12 @@ class Node:
     def coin_toss(self, random_maximum):
         rr = random.randrange(0, random_maximum)
         tossed = int(random.random() * 10)
-        print("tossed: ", rr)
+        #print("tossed: ", rr)
         return rr
+
+    def gen_rand(self):
+        return random.randrange(0, 5)
+
+    resume: make this random range narrow because we may have a large number of nodes. Problem is then though using this
+    random number to link back to somehow contribute to deriving a random selection across the entire stake count.
 

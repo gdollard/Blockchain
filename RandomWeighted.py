@@ -3,10 +3,7 @@ from Node import Node
 
 
 
-#x = [1, 2, 3, 4]
-#node1 = Node(5)
-#node2 = Node(10)
-#nodes = [node1, node2]
+
 
 
 def addition(array):
