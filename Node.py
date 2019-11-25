@@ -8,8 +8,9 @@ class Node:
         self.stake = stake_value
 
     # the purpose of this is to randomly generate a number and keep going until all nodes produce the same number
-    def coin_toss(self):
+    def coin_toss(self, random_maximum):
+        rr = random.randrange(0, random_maximum)
         tossed = int(random.random() * 10)
-        print("tossed: ", tossed)
-        return tossed
+        print("tossed: ", rr)
+        return rr
 

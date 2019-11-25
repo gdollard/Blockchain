@@ -1,17 +1,6 @@
 from Node import Node
 
 
-class RandomWeighted:
-
-    def run_coin_toss(self, nodes):
-        coins_match = False
-        while not coins_match:
-            initial_value = nodes[0].coin_toss()
-            for node in nodes:
-                if node.coin_toss() == initial_value:
-                    continue
-            if coins_match:
-                return initial_value
 
 
 #x = [1, 2, 3, 4]
@@ -27,15 +16,15 @@ def addition(array):
         return array[0] + addition(array[1:])
 
 
-def get_common_toss(nodes_array, value):
-    print("Looking for value: " + str(value))
+def get_common_toss(random_maximum, nodes_array, value):
+    #print("Looking for value: " + str(value))
     if len(nodes_array) == 0:
-        print("Reached the end...")
+        #print("Reached the end...")
         return value
     else:
-        if nodes_array[0].coin_toss() == value:
-            print("Match found, continue")
-            get_common_toss(nodes_array[1:], value)
+        if nodes_array[0].coin_toss(random_maximum) == value:
+            #print("Match found, continue")
+            get_common_toss(random_maximum, nodes_array[1:], value)
         else:
             return -1
         return value
@@ -45,21 +34,29 @@ def get_common_toss(nodes_array, value):
 
 
 def bla():
-    main = RandomWeighted()
-    node1 = Node(5)
-    node2 = Node(10)
-    nodes = [node1, node2]
+    #main = RandomWeighted()
+    nodeA = Node(9)
+    nodeB = Node(5000)
+    nodeC = Node(100)
+    nodeD = Node(50)
+    nodeE = Node(100)
+    nodeF = Node(50)
+    nodeG = Node(100)
+    nodeH = Node(50)
 
-    need to update the random number gen to ensure any number from the size of my_list can be generated
+    nodes = [nodeA, nodeB, nodeC, nodeD, nodeE, nodeF, nodeG, nodeH]
 
-    common_toss = get_common_toss(nodes, nodes[0].coin_toss())
+    # populate the array of all elector tickets
+    elector_tickets = ['A'] * nodeA.stake + ['B'] * nodeB.stake + ['C'] * nodeC.stake + ['D'] * nodeD.stake + ['E'] * nodeE.stake + ['F'] * nodeF.stake + ['G'] * nodeG.stake + ['H'] * nodeH.stake
+
+    common_toss = get_common_toss(len(elector_tickets), nodes, nodes[0].coin_toss(len(elector_tickets)))
     while common_toss < 0:
-        common_toss = get_common_toss(nodes, nodes[0].coin_toss())
+        common_toss = get_common_toss(len(elector_tickets), nodes, nodes[0].coin_toss(len(elector_tickets)))
 
     if common_toss >= 0:
         # create a list of tokens, the greater the stake a node has the greater the number of tokens it has
-        my_list = ['A'] * node1.stake + ['B'] * node2.stake
-        print("Selected Leader is: " + my_list[common_toss])
+
+        print("Selected Leader is: " + elector_tickets[common_toss] + " from tossing a: " + str(common_toss))
     else:
         print("No coin toss value agreeed..")
 
