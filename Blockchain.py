@@ -1,4 +1,8 @@
 from Block import Block
+from Node import Node
+from OuroborosMint import get_common_toss
+import random
+
 from ChainValidation import ChainValidation
 
 
@@ -11,6 +15,21 @@ class Blockchain:
     target = 2 ** (256 - diff);
     block = Block('Genesis')
     root = head = block  # linked list thing
+
+    # Ouroboros nodes
+    nodeA = Node(9)
+    nodeB = Node(5)
+    nodeC = Node(100)
+    nodeD = Node(50)
+    nodeE = Node(100)
+    nodeF = Node(50)
+    nodeG = Node(1100)
+    nodeH = Node(50)
+    nodes = [nodeA, nodeB, nodeC, nodeD, nodeE, nodeF, nodeG, nodeH]
+
+    # populate the array of all elector tickets
+    elector_tickets = ['A'] * nodeA.stake + ['B'] * nodeB.stake + ['C'] * nodeC.stake + ['D'] * nodeD.stake + [
+        'E'] * nodeE.stake + ['F'] * nodeF.stake + ['G'] * nodeG.stake + ['H'] * nodeH.stake
 
     # Adds a block to the blockchain and sets it as the head block
     def add_block(self, block):
@@ -28,6 +47,27 @@ class Blockchain:
                 break # break for now, until we have the mine function written
             else:
                 block.nonce += 1
+
+    # This is the Ouroborous implementation of the mining/mint function
+    def ouroboros_mint(self, block):
+        call_count = 1
+        common_toss = get_common_toss(len(self.elector_tickets), self.nodes, self.nodes[0].coin_toss(len(self.elector_tickets)))
+        while common_toss < 0:
+            call_count += 1
+            common_toss = get_common_toss(len(self.elector_tickets), self.nodes, self.nodes[0].coin_toss(len(self.elector_tickets)))
+
+        if common_toss >= 0:
+            # use the common toss to iteratively that number of times to produce a random number within the range of elector_tickets
+            winning_ticket = 0
+            for i in range(common_toss):
+                winning_ticket = random.randrange(len(self.elector_tickets))
+
+            # create a list of tokens, the greater the stake a node has the greater the number of tokens it has
+            print("Selected Leader is: " + self.elector_tickets[winning_ticket] + " Winning Ticket: " + str(winning_ticket))
+            print("Number of independent coin toss rounds needed: ", call_count)
+        else:
+            print("No coin toss value agreeed..")
+
 
     # Utility function to print out all the blocks and their details
     def print_all_blocks(self):
@@ -69,7 +109,8 @@ def create_some_blocks():
     counter = 0
     while counter < 9:
         block = Block('SampleBlock_' + str(counter))
-        chain.mine(block)
+        #chain.mine(block)
+        chain.ouroboros_mint(block)
         counter += 1
     return chain
 
