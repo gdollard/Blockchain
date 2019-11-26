@@ -52,10 +52,10 @@ class Blockchain:
     # This is the Ouroborous implementation of the mining/mint function
     def ouroboros_mint(self, block):
         call_count = 1
-        common_toss = get_common_toss(len(self.elector_tickets), self.nodes, self.nodes[0].coin_toss(len(self.elector_tickets)))
+        common_toss = get_common_toss(self.nodes, self.nodes[0].coin_toss())
         while common_toss < 0:
             call_count += 1
-            common_toss = get_common_toss(len(self.elector_tickets), self.nodes, self.nodes[0].coin_toss(len(self.elector_tickets)))
+            common_toss = get_common_toss(self.nodes, self.nodes[0].coin_toss())
 
         if common_toss >= 0:
             # use the common toss to iteratively that number of times to produce a random number within the range of elector_tickets
