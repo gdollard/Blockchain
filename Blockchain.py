@@ -2,6 +2,7 @@ from Block import Block
 from Node import Node
 from OuroborosMint import get_common_toss
 import random
+import time
 
 from ChainValidation import ChainValidation
 
@@ -10,7 +11,7 @@ from ChainValidation import ChainValidation
 # Distributed Ledger Technology - Lab 1
 
 class Blockchain:
-    diff = 3;  # difficulty in mining
+    diff = 15;  # difficulty in mining
     maxNonce = 2 ** 32;
     target = 2 ** (256 - diff);
     block = Block('Genesis')
@@ -64,7 +65,8 @@ class Blockchain:
 
             # create a list of tokens, the greater the stake a node has the greater the number of tokens it has
             print("Selected Leader is: " + self.elector_tickets[winning_ticket] + " Winning Ticket: " + str(winning_ticket))
-            print("Number of independent coin toss rounds needed: ", call_count)
+            print("Block: " + block.data + " successfully mined, it took : " + str(call_count) + " toin cosses across all nodes.")
+            self.add_block(block)
         else:
             print("No coin toss value agreeed..")
 
@@ -104,7 +106,6 @@ class Blockchain:
 # Create some blocks and return the entire blockchain
 def create_some_blocks():
     chain = Blockchain()
-
     # create come blocks
     counter = 0
     while counter < 9:
@@ -120,7 +121,9 @@ def validate_blocks(blockchain):
     valiator.head_check(blockchain)
     valiator.integrity_check(blockchain)
 
-
+start_time = time.time()
 the_blockchain = create_some_blocks()
 validate_blocks(the_blockchain)
 the_blockchain.print_all_blocks()
+elapsed_time = time.time() - start_time
+print("Elapsed time: ", elapsed_time)
