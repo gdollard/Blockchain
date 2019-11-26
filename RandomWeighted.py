@@ -1,4 +1,5 @@
 from Node import Node
+import random
 
 
 
@@ -16,15 +17,16 @@ def addition(array):
 def get_common_toss(random_maximum, nodes_array, value):
     #print("Looking for value: " + str(value))
     if len(nodes_array) == 0:
-        #print("Reached the end...")
+        print("Reached the end, common toss is: ", value)
         return value
     else:
-        if nodes_array[0].coin_toss(random_maximum) == value:
-            #print("Match found, continue")
-            get_common_toss(random_maximum, nodes_array[1:], value)
+        random = nodes_array[0].coin_toss(random_maximum)
+        if random == value:
+            #print("Match found, continue to next node")
+            return get_common_toss(random_maximum, nodes_array[1:], value)
         else:
+            #print("Run of matches ended, start all over again")
             return -1
-        return value
 
 
 # print(addition(x))
@@ -33,12 +35,12 @@ def get_common_toss(random_maximum, nodes_array, value):
 def bla():
     #main = RandomWeighted()
     nodeA = Node(9)
-    nodeB = Node(5000)
+    nodeB = Node(5)
     nodeC = Node(100)
     nodeD = Node(50)
     nodeE = Node(100)
     nodeF = Node(50)
-    nodeG = Node(100)
+    nodeG = Node(1100)
     nodeH = Node(50)
 
     nodes = [nodeA, nodeB, nodeC, nodeD, nodeE, nodeF, nodeG, nodeH]
@@ -46,14 +48,21 @@ def bla():
     # populate the array of all elector tickets
     elector_tickets = ['A'] * nodeA.stake + ['B'] * nodeB.stake + ['C'] * nodeC.stake + ['D'] * nodeD.stake + ['E'] * nodeE.stake + ['F'] * nodeF.stake + ['G'] * nodeG.stake + ['H'] * nodeH.stake
 
+    call_count = 1
     common_toss = get_common_toss(len(elector_tickets), nodes, nodes[0].coin_toss(len(elector_tickets)))
     while common_toss < 0:
+        call_count += 1
         common_toss = get_common_toss(len(elector_tickets), nodes, nodes[0].coin_toss(len(elector_tickets)))
 
     if common_toss >= 0:
-        # create a list of tokens, the greater the stake a node has the greater the number of tokens it has
+        #use the common toss to iteratively that number of times to produce a random number within the range of elector_tickets
+        winning_ticket = 0
+        for i in range(common_toss):
+            winning_ticket = random.randrange(len(elector_tickets))
 
-        print("Selected Leader is: " + elector_tickets[common_toss] + " from tossing a: " + str(common_toss))
+        # create a list of tokens, the greater the stake a node has the greater the number of tokens it has
+        print("Selected Leader is: " + elector_tickets[winning_ticket] + " Winning Ticket: " + str(winning_ticket))
+        print("Number of independent coin toss rounds needed: ", call_count)
     else:
         print("No coin toss value agreeed..")
 
