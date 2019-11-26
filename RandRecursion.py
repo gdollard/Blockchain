@@ -1,12 +1,12 @@
-from Node import Node
+from OuroborosNode import OuroborosNode
 
-node1 = Node(2)
-node2 = Node(3)
-node3 = Node(3)
-node4 = Node(1)
-node5 = Node(2)
-node6 = Node(2)
-node7 = Node(2)
+node1 = OuroborosNode(2)
+node2 = OuroborosNode(3)
+node3 = OuroborosNode(3)
+node4 = OuroborosNode(1)
+node5 = OuroborosNode(2)
+node6 = OuroborosNode(2)
+node7 = OuroborosNode(2)
 nodes = [node1, node2, node3, node4, node5, node6, node7]
 
 # takes the list of nodes and recursively calls a coin toss on them. It will keep

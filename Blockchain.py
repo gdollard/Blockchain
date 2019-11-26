@@ -1,6 +1,6 @@
 from Block import Block
-from Node import Node
-from OuroborosMint import get_common_toss
+from OuroborosNode import OuroborosNode
+from OuroborosMint import get_multiparty_computation
 import random
 import time
 
@@ -18,14 +18,14 @@ class Blockchain:
     root = head = block  # linked list thing
 
     # Ouroboros nodes
-    nodeA = Node(9)
-    nodeB = Node(5)
-    nodeC = Node(100)
-    nodeD = Node(50)
-    nodeE = Node(100)
-    nodeF = Node(50)
-    nodeG = Node(1100)
-    nodeH = Node(50)
+    nodeA = OuroborosNode(9)
+    nodeB = OuroborosNode(5)
+    nodeC = OuroborosNode(100)
+    nodeD = OuroborosNode(50)
+    nodeE = OuroborosNode(100)
+    nodeF = OuroborosNode(50)
+    nodeG = OuroborosNode(1100)
+    nodeH = OuroborosNode(50)
     nodes = [nodeA, nodeB, nodeC, nodeD, nodeE, nodeF, nodeG, nodeH]
 
     # populate the array of all elector tickets
@@ -52,10 +52,10 @@ class Blockchain:
     # This is the Ouroborous implementation of the mining/mint function
     def ouroboros_mint(self, block):
         call_count = 1
-        common_toss = get_common_toss(self.nodes, self.nodes[0].coin_toss())
+        common_toss = get_multiparty_computation(self.nodes, self.nodes[0].coin_toss())
         while common_toss < 0:
             call_count += 1
-            common_toss = get_common_toss(self.nodes, self.nodes[0].coin_toss())
+            common_toss = get_multiparty_computation(self.nodes, self.nodes[0].coin_toss())
 
         if common_toss >= 0:
             # use the common toss to iteratively that number of times to produce a random number within the range of elector_tickets

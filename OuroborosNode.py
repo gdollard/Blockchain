@@ -1,9 +1,12 @@
 import random
 
+# See Ref: https://cardanodocs.com/cardano/proof-of-stake/
 
-# This class represents a node which is used in the Ouroboros PoS algorithm
+# This class represents a node which is used in the Ouroboros PoS algorithm.
+# As part of the Multiparty Computation each node is tasked with tossing a coin.
+# This class contains the implementation for tossing the coin.
 # Author: Glenn Dollard
-class Node:
+class OuroborosNode:
     stake = 0;
 
     def __init__(self, stake_value):

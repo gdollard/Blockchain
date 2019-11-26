@@ -1,4 +1,4 @@
-from Node import Node
+from OuroborosNode import OuroborosNode
 import random
 
 
@@ -34,14 +34,14 @@ def get_common_toss(random_maximum, nodes_array, value):
 
 def bla():
     #main = RandomWeighted()
-    nodeA = Node(9)
-    nodeB = Node(5)
-    nodeC = Node(100)
-    nodeD = Node(50)
-    nodeE = Node(100)
-    nodeF = Node(50)
-    nodeG = Node(1100)
-    nodeH = Node(50)
+    nodeA = OuroborosNode(9)
+    nodeB = OuroborosNode(5)
+    nodeC = OuroborosNode(100)
+    nodeD = OuroborosNode(50)
+    nodeE = OuroborosNode(100)
+    nodeF = OuroborosNode(50)
+    nodeG = OuroborosNode(1100)
+    nodeH = OuroborosNode(50)
 
     nodes = [nodeA, nodeB, nodeC, nodeD, nodeE, nodeF, nodeG, nodeH]
 
