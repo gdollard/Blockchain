@@ -1,5 +1,6 @@
 import random
 
+
 # See Ref: https://cardanodocs.com/cardano/proof-of-stake/
 
 # This class represents a node which is used in the Ouroboros PoS algorithm.
