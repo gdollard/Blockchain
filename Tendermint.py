@@ -37,10 +37,21 @@ class Tendermint:
         block = Block('SampleTendermint Block')
 
         # let the first node propose (for now)
-        self.nodes[0].propose(block)
+        self.nodes[0].validate_block(block)
+        self.nodes[1].validate_block(block)
+
+        self.nodes[0].pre_vote_block()
+        self.nodes[1].pre_vote_block()
+
+        self.nodes[0].pre_commit_block()
+        self.nodes[1].pre_commit_block()
+
+        self.nodes[0].commit_block()
+        self.nodes[1].commit_block()
 
 
 tendermint = Tendermint()
 tendermint.initialise()
+
 tendermint.begin_propose()
 print("Nodes registered..")

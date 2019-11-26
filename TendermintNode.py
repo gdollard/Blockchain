@@ -9,6 +9,9 @@ class TendermintNode:
     pre_vote_count = 0
     pre_commit_count = 0
     commit_count = 0
+    validated_count = 0
+    prevoted_count = 0
+    pre_committed_count = 0
 
     def __init__(self, stake_value):
         self.stake = stake_value
@@ -28,6 +31,7 @@ class TendermintNode:
         self.pre_vote_count += 1
         #broadcasting
         for node in self.peer_nodes:
+            node.pre_vote()
             node.validate_block(block)
 
 
@@ -35,11 +39,34 @@ class TendermintNode:
     def validate_block(self, block):
         print("Validating this block: " + block.data + ", OK, it's valid, entering PREVOTE State")
         self.state = "PREVOTE"
-        self.pre_vote_count += 1
+        #self.pre_vote_count += 1
         # lets pretend the block is valid
-
         for node in self.peer_nodes:
-            node.pre_vote()
+            node.record_validated()
+            #node.pre_vote()
+
+    def pre_vote_block(self):
+        if self.state != "PREVOTE":
+            return
+        else:
+            if self.validated_count >= 1:
+                self.state = "PRECOMMIT"
+                for node in self.peer_nodes:
+                    node.record_prevoted()
+
+    def pre_commit_block(self):
+        if self.state != "PRECOMMIT":
+            return
+        else:
+            if self.prevoted_count >=1:
+                self.state = "COMMIT"
+                for node in self.peer_nodes:
+                    node.record_prevoted()
+
+    def commit_block(self):
+
+
+
 
     def pre_vote(self):
         self.pre_vote_count += 1  # record the fact that some other node is ready to vote
@@ -75,5 +102,12 @@ class TendermintNode:
                 print("Reached COMMITTED, add the block")
 
 
+    def record_validated(self):
+        self.validated_count += 1
 
+    def record_prevoted(self):
+        self.prevoted_count += 1
+
+    def record_precommited(self):
+        self.pre_committed_count += 1
 
