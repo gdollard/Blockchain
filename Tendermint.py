@@ -1,4 +1,5 @@
 from TendermintNode import TendermintNode
+from Block import Block
 # Tendermint is a mostly asynchronous, deterministic, BFT consensus where validators
 # have a stake which denotes their voting power.
 
@@ -25,12 +26,21 @@ class Tendermint:
         # create some nodes
         node1 = TendermintNode(3)
         node2 = TendermintNode(5)
-        node3 = TendermintNode(19)
+        #node3 = TendermintNode(19)
 
-        self.nodes = [node1, node2, node3]
+        self.nodes = [node1, node2]
         for node in self.nodes:
             node.register(self.nodes)
 
+    # Kicks off the proposal
+    def begin_propose(self):
+        block = Block('SampleTendermint Block')
+
+        # let the first node propose (for now)
+        self.nodes[0].propose(block)
+
+
 tendermint = Tendermint()
 tendermint.initialise()
+tendermint.begin_propose()
 print("Nodes registered..")
