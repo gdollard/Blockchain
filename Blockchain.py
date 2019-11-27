@@ -7,6 +7,7 @@ from OuroborosMint import get_multiparty_computation
 from OuroborosMint import bootstrap_ouroboros
 from Tendermint import Tendermint
 from ChainValidation import ChainValidation
+from Casper import Casper
 
 
 # Author: G. Dollard
@@ -64,7 +65,15 @@ class Blockchain:
         if should_add:
             self.add_block(block)
         else:
-            print("Tendermint did not come to a consensus, block not added.")
+            print("Tendermint failed to come to a consensus, block not added.")
+
+    def casper_mint(self, block, casper_object):
+        should_add = casper_object.begin(block)
+        if should_add:
+            self.add_block(block)
+        else:
+            print("Casper failed to come to a consensus, block not added.")
+
 
 
     # Utility function to print out all the blocks and their details
@@ -120,6 +129,17 @@ def start_tendermint_algorithm():
     elapsed_time = time.time() - start_time
     return (chain, elapsed_time)
 
+def start_casper_algorithm():
+    chain = Blockchain
+    casper = Casper()
+    casper.bootstrap()
+    start_time = time.time()
+    for i in range(10):
+        block = Block('CasperBlock_' + str(i))
+        chain.casper_mint(block, casper)
+    elapsed_time = time.time() - start_time
+    return (chain, elapsed_time)
+
 def start():
     print("Welcome, this will mine 10 blocks using one of the algorithms below, please enter required information: ")
     algorithm = input(
@@ -134,6 +154,8 @@ def start():
         return start_ouroboros_algorithm()
     if algorithm == 2:
         return start_tendermint_algorithm()
+    if algorithm == 3:
+        return start_casper_algorithm()
     else:
         print("Invalid algorithm code entered, quitting.")
         exit(-1)
