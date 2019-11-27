@@ -24,8 +24,8 @@ class Tendermint:
 
     def initialise(self):
         # create some nodes
-        node1 = TendermintNode(3)
-        node2 = TendermintNode(5)
+        node1 = TendermintNode(3, 111)
+        node2 = TendermintNode(5, 222)
         #node3 = TendermintNode(19)
 
         self.nodes = [node1, node2]
@@ -43,7 +43,7 @@ class Tendermint:
         self.nodes[0].pre_vote_block()
         self.nodes[1].pre_vote_block()
 
-        self.nodes[0].pre_commit_block()
+        #self.nodes[0].pre_commit_block()
         self.nodes[1].pre_commit_block()
 
         self.nodes[0].commit_block()
