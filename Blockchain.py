@@ -59,10 +59,8 @@ class Blockchain:
             print("No coin toss value agreeed..")
 
     # perform the mining using the Tendermint implementation
-    def tendermint_mint(self, block):
-        tendermint = Tendermint()
-        tendermint.bootstrap()
-        should_add = tendermint.begin(block)
+    def tendermint_mint(self, block, tendermint_object):
+        should_add = tendermint_object.begin(block)
         if should_add:
             self.add_block(block)
         else:
@@ -109,9 +107,18 @@ def start_ouroboros_algorithm():
         block = Block('OuroborosBlock_' + str(i))
         chain.ouroboros_mint(block, nodes)
     elapsed_time = time.time() - start_time
-    print("Elapsed time: ", elapsed_time)
     return (chain, elapsed_time)
 
+def start_tendermint_algorithm():
+    chain = Blockchain()
+    tenderint = Tendermint()
+    tenderint.bootstrap_tendermint()
+    start_time = time.time()
+    for i in range(10):
+        block = Block('TendermintBlock_' + str(i))
+        chain.tendermint_mint(block, tenderint)
+    elapsed_time = time.time() - start_time
+    return (chain, elapsed_time)
 
 def start():
     print("Welcome, this will mine 10 blocks using one of the algorithms below, please enter required information: ")
@@ -125,6 +132,8 @@ def start():
 
     if algorithm == 1:
         return start_ouroboros_algorithm()
+    if algorithm == 2:
+        return start_tendermint_algorithm()
     else:
         print("Invalid algorithm code entered, quitting.")
         exit(-1)

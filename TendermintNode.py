@@ -93,6 +93,7 @@ class TendermintNode:
         self.prevoted_count = 0
         self.pre_committed_count = 0
         self.committed_count = 0
+        self.committed_peers.clear()
 
     def record_validated(self):
         self.validated_count += 1
