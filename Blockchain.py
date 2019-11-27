@@ -101,28 +101,20 @@ class Blockchain:
         return blocks
 
 
-# Create some blocks and return the entire blockchain
-def create_some_blocks():
-    chain = Blockchain()
-    # create come blocks
-    counter = 0
-    while counter < 9:
-        block = Block('SampleBlock_' + str(counter))
-        #chain.mine(block)
-        #chain.ouroboros_mint(block)
-        #chain.tendermint_mint(block)
-        counter += 1
-    return chain
-
 def start_ouroboros_algorithm():
+    start_time = time.time()
     chain = Blockchain()
     nodes = bootstrap_ouroboros()
     for i in range(10):
         block = Block('OuroborosBlock_' + str(i))
         chain.ouroboros_mint(block, nodes)
-    return chain
+    elapsed_time = time.time() - start_time
+    print("Elapsed time: ", elapsed_time)
+    return (chain, elapsed_time)
+
 
 def start():
+    print("Welcome, this will mine 10 blocks using one of the algorithms below, please enter required information: ")
     algorithm = input(
         "Select your Consensus Algorithm:\n 1. Ouroboros \n 2: Tendermint \n 3: Casper ")
     try:
@@ -134,7 +126,7 @@ def start():
     if algorithm == 1:
         return start_ouroboros_algorithm()
     else:
-        print("Invalid hashing option selected, quitting.")
+        print("Invalid algorithm code entered, quitting.")
         exit(-1)
 
 def validate_blocks(blockchain):
@@ -142,9 +134,8 @@ def validate_blocks(blockchain):
     valiator.head_check(blockchain)
     valiator.integrity_check(blockchain)
 
-start_time = time.time()
-the_blockchain = start()
-validate_blocks(the_blockchain)
-the_blockchain.print_all_blocks()
-elapsed_time = time.time() - start_time
-print("Elapsed time: ", elapsed_time)
+
+tuple = the_blockchain = start()
+validate_blocks(tuple[0])
+tuple[0].print_all_blocks()
+print(" >>>>> Elapsed Time >>>>>>: ", tuple[1])
