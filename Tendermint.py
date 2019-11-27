@@ -1,5 +1,6 @@
 from TendermintNode import TendermintNode
 from Block import Block
+import random
 # Tendermint is a mostly asynchronous, deterministic, BFT consensus where validators
 # have a stake which denotes their voting power.
 
@@ -45,20 +46,53 @@ class Tendermint:
     def begin(self):
         block = Block('SampleTendermint Block')
 
-        # select the
+        # select the leader, this leader will be the one determining whether to add the block or not
+        #randomly pick for now
+        leader = self.nodes[random.randrange(0, len(self.nodes))]
 
         # let the first node propose (for now)
-        self.nodes[0].validate_block(block)
-        self.nodes[1].validate_block(block)
+        self.nodes[0].validate_block(block, leader)
+        self.nodes[1].validate_block(block, leader)
+        self.nodes[2].validate_block(block, leader)
+        self.nodes[3].validate_block(block, leader)
+        self.nodes[4].validate_block(block, leader)
+        self.nodes[5].validate_block(block, leader)
+        self.nodes[6].validate_block(block, leader)
+        self.nodes[7].validate_block(block, leader)
 
         self.nodes[0].pre_vote_block()
         self.nodes[1].pre_vote_block()
+        self.nodes[2].pre_vote_block()
+        self.nodes[3].pre_vote_block()
+        self.nodes[4].pre_vote_block()
+        self.nodes[5].pre_vote_block()
+        self.nodes[6].pre_vote_block()
+        self.nodes[7].pre_vote_block()
 
         self.nodes[0].pre_commit_block()
         self.nodes[1].pre_commit_block()
+        self.nodes[2].pre_commit_block()
+        #self.nodes[3].pre_commit_block()
+        self.nodes[4].pre_commit_block()
+        self.nodes[5].pre_commit_block()
+        self.nodes[6].pre_commit_block()
+        self.nodes[7].pre_commit_block()
 
         self.nodes[0].commit_block()
         self.nodes[1].commit_block()
+        self.nodes[2].commit_block()
+        #self.nodes[3].commit_block()
+        #self.nodes[4].commit_block()
+        #self.nodes[5].commit_block()
+        self.nodes[6].commit_block()
+        self.nodes[7].commit_block()
+
+        # simulated end-of-rounds, get the result from the leader
+        should_add = leader.should_block_be_added()
+        if should_add:
+            print("Yes, add the block")
+        else:
+            print("Do Not add the block")
 
 
 tendermint = Tendermint()

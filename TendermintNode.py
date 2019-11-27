@@ -11,6 +11,8 @@ class TendermintNode:
     pre_committed_count = 0
     committed_count = 0
     node_id = None
+    leader = None
+    committed_peers = []
 
     def __init__(self, stake_value, node_id):
         self.stake = stake_value
@@ -25,7 +27,8 @@ class TendermintNode:
                 self.peer_nodes.append(node)
 
 
-    def validate_block(self, block):
+    def validate_block(self, block, leader):
+        self.leader = leader
         self.state = "PREVOTE"
         self.debug("Block " + block.data + " is valid, moving into PREVOTE state and informing all peer nodes.")
         # lets pretend the block is valid
@@ -65,10 +68,27 @@ class TendermintNode:
             if self.pre_committed_count >= self.get_node_approval_threshold():
                 self.debug("Just COMMITTED the block")
                 self.state = "COMMITTED"
+                # tell the leader I have committed
+                self.leader.inform_of_commit(self)
                 for node in self.peer_nodes:
                     node.record_committed()
             else:
                 self.debug("Requested to commit block but don't satisfy the required threshold , rejecting.")
+
+    # this function will be called on the leader to register the committer node
+    def inform_of_commit(self, committer_node):
+        if self.state == "FINISHED":
+            return
+        if self.leader == self:
+            self.committed_peers.append(committer_node)
+
+    # moves the node into FINISHED state and resets the state counters
+    def finish(self):
+        self.state = "FINISHED"
+        self.validated_count = 0
+        self.prevoted_count = 0
+        self.pre_committed_count = 0
+        self.committed_count = 0
 
     def record_validated(self):
         self.validated_count += 1
@@ -86,6 +106,20 @@ class TendermintNode:
     def get_node_approval_threshold(self):
         return round(len(self.peer_nodes) * .66)
 
+    def should_block_be_added(self):
+        if self.leader == self:
+            if len(self.committed_peers) >= self.get_node_approval_threshold():
+                self.debug(
+                    "Comitter here, we have enough commits to add the block, broadcasting FINISHED state to all nodes.")
+                self.finish()
+                for node in self.peer_nodes:
+                    node.finish()
+                return True
+            else:
+                return False
+
+
+    # Handy debugging to show the node ID
     def debug(self, message):
         print("[" + str(self.node_id) + "] " + message)
 
