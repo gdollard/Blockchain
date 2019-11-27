@@ -26,15 +26,26 @@ class Tendermint:
         # create some nodes
         node1 = TendermintNode(3, 111)
         node2 = TendermintNode(5, 222)
-        #node3 = TendermintNode(19)
+        node3 = TendermintNode(19, 333)
+        node4 = TendermintNode(21, 44)
+        node5 = TendermintNode(67, 555)
+        node6 = TendermintNode(8, 66)
+        node7 = TendermintNode(119, 77)
+        node8 = TendermintNode(695, 88)
+        node9 = TendermintNode(12, 99)
+        node10 = TendermintNode(3, 1010)
 
-        self.nodes = [node1, node2]
+
+        self.nodes = [node1, node2, node3, node4, node5, node6, node7, node8, node9, node10]
+
         for node in self.nodes:
             node.register(self.nodes)
 
     # Kicks off the proposal
-    def begin_propose(self):
+    def begin(self):
         block = Block('SampleTendermint Block')
+
+        # select the
 
         # let the first node propose (for now)
         self.nodes[0].validate_block(block)
@@ -43,7 +54,7 @@ class Tendermint:
         self.nodes[0].pre_vote_block()
         self.nodes[1].pre_vote_block()
 
-        #self.nodes[0].pre_commit_block()
+        self.nodes[0].pre_commit_block()
         self.nodes[1].pre_commit_block()
 
         self.nodes[0].commit_block()
@@ -52,5 +63,4 @@ class Tendermint:
 
 tendermint = Tendermint()
 tendermint.initialise()
-
-tendermint.begin_propose()
+tendermint.begin()

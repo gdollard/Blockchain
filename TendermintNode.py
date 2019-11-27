@@ -10,9 +10,6 @@ class TendermintNode:
     prevoted_count = 0
     pre_committed_count = 0
     committed_count = 0
-    validated_count_threshold = 1
-    prevoted_count_threshold = 1
-    pre_committed_count_threshold = 1
     node_id = None
 
     def __init__(self, stake_value, node_id):
@@ -40,20 +37,20 @@ class TendermintNode:
             self.debug("Requested to pre_vote block but not in the PRE_VOTE state, rejecting.")
             return
         else:
-            if self.validated_count >= self.validated_count_threshold:
+            if self.validated_count >= self.get_node_approval_threshold():
                 self.state = "PRECOMMIT"
                 self.debug("Just PRE_VOTED the block, now in PRE_COMMIT state")
                 for node in self.peer_nodes:
                     node.record_prevoted()
             else:
-                self.debug("Requested to pre_vote block but don't satisfy the required threshold , rejecting.")
+                self.debug("Requested to pre_vote block but don't satisfy the required threshold, rejecting.")
 
     def pre_commit_block(self):
         if self.state != "PRECOMMIT":
             self.debug("Requested to pre_commit block but not in the PRE_COMMIT state, rejecting.")
             return
         else:
-            if self.prevoted_count >= self.prevoted_count_threshold:
+            if self.prevoted_count >= self.get_node_approval_threshold():
                 self.state = "COMMIT"
                 self.debug("Just PRE_COMMITTED the block, now in COMMIT state")
                 for node in self.peer_nodes:
@@ -65,7 +62,7 @@ class TendermintNode:
         if self.state != "COMMIT":
             self.debug("Requested to commit block but not in the COMMIT state, rejecting.")
         else:
-            if self.pre_committed_count >= self.pre_committed_count_threshold:
+            if self.pre_committed_count >= self.get_node_approval_threshold():
                 self.debug("Just COMMITTED the block")
                 self.state = "COMMITTED"
                 for node in self.peer_nodes:
@@ -84,6 +81,10 @@ class TendermintNode:
 
     def record_committed(self):
         self.committed_count += 1
+
+    # BFT states we can handle mining if we have at least two thirds good nodes
+    def get_node_approval_threshold(self):
+        return round(len(self.peer_nodes) * .66)
 
     def debug(self, message):
         print("[" + str(self.node_id) + "] " + message)
