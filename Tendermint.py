@@ -54,4 +54,3 @@ tendermint = Tendermint()
 tendermint.initialise()
 
 tendermint.begin_propose()
-print("Nodes registered..")
