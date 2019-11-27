@@ -11,6 +11,7 @@ class Tendermint:
     nodes = []
 
     def bootstrap(self):
+
         # create some nodes
         node1 = TendermintNode(3, 111)
         node2 = TendermintNode(5, 222)
@@ -26,6 +27,9 @@ class Tendermint:
 
         self.nodes = [node1, node2, node3, node4, node5, node6, node7, node8, node9, node10]
 
+        elector_tickets = ['A'] * nodeA.stake + ['B'] * nodeB.stake + ['C'] * nodeC.stake + ['D'] * nodeD.stake + [
+            'E'] * nodeE.stake + ['F'] * nodeF.stake + ['G'] * nodeG.stake + ['H'] * nodeH.stake
+
         for node in self.nodes:
             node.register(self.nodes)
 
@@ -33,7 +37,8 @@ class Tendermint:
     def begin(self, block):
 
         # select the leader, this leader will be the one determining whether to add the block or not
-        #randomly pick for now
+        # Pick a proposer weighted on their stake
+
         leader = self.nodes[random.randrange(0, len(self.nodes))]
 
         # let the first node propose (for now)

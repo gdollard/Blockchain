@@ -1,3 +1,5 @@
+from OuroborosNode import OuroborosNode
+import random
 # Author: Glenn Dollard.
 
 # See ref: https://cardanodocs.com/cardano/proof-of-stake/
@@ -18,3 +20,31 @@ def get_multiparty_computation(nodes_array, value):
         else:
             # print("Run of matches ended, start all over again")
             return -1
+
+
+# Does the bootstrapping for Ouroboros, gets the number of nodes and initialises them with stake
+def bootstrap_ouroboros():
+    nodes = []
+    num_nodes = input("Enter the number of Nodes: ")
+    try:
+        num_nodes = int(num_nodes)
+    except ValueError:
+        print("Invalid argument supplied, quitting.")
+        # quit the program if we have invalid data
+        exit()
+    counter = 0
+    while counter < num_nodes:
+        new_node = OuroborosNode(random.randrange(1,101), "ouroboros_node_" + str(counter))
+        nodes.append(new_node)
+        counter += 1
+    return nodes
+
+# This function takes a list of nodes and produces a list of tickets, each ticket has its node as the entry
+def get_tickets_for_nodes(nodes):
+    tickets = []
+    for node in nodes:
+        for index in range(node.stake):
+            tickets.append(node.id)
+    return tickets
+
+

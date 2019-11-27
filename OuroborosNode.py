@@ -9,9 +9,11 @@ import random
 # Author: Glenn Dollard
 class OuroborosNode:
     stake = 0;
+    id = None
 
-    def __init__(self, stake_value):
+    def __init__(self, stake_value, id):
         self.stake = stake_value
+        self.id = id
 
     # the purpose of this is to randomly generate a number and keep going until all nodes produce the same number
     def coin_toss(self):

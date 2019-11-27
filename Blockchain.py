@@ -2,8 +2,9 @@ import random
 import time
 
 from Block import Block
-from OuroborosNode import OuroborosNode
+from OuroborosMint import get_tickets_for_nodes
 from OuroborosMint import get_multiparty_computation
+from OuroborosMint import bootstrap_ouroboros
 from Tendermint import Tendermint
 from ChainValidation import ChainValidation
 
@@ -17,21 +18,6 @@ class Blockchain:
     target = 2 ** (256 - diff);
     block = Block('Genesis')
     root = head = block  # linked list thing
-
-    # Ouroboros nodes
-    nodeA = OuroborosNode(9)
-    nodeB = OuroborosNode(5)
-    nodeC = OuroborosNode(100)
-    nodeD = OuroborosNode(50)
-    nodeE = OuroborosNode(100)
-    nodeF = OuroborosNode(50)
-    nodeG = OuroborosNode(1100)
-    nodeH = OuroborosNode(50)
-    nodes = [nodeA, nodeB, nodeC, nodeD, nodeE, nodeF, nodeG, nodeH]
-
-    # populate the array of all elector tickets
-    elector_tickets = ['A'] * nodeA.stake + ['B'] * nodeB.stake + ['C'] * nodeC.stake + ['D'] * nodeD.stake + [
-        'E'] * nodeE.stake + ['F'] * nodeF.stake + ['G'] * nodeG.stake + ['H'] * nodeH.stake
 
     # Adds a block to the blockchain and sets it as the head block
     def add_block(self, block):
@@ -51,21 +37,22 @@ class Blockchain:
                 block.nonce += 1
 
     # # perform the mining using the Ouroborous implementation of the mining/mint function
-    def ouroboros_mint(self, block):
+    def ouroboros_mint(self, block, ouroboros_nodes):
+        elector_tickets = get_tickets_for_nodes(ouroboros_nodes)
         call_count = 1
-        common_toss = get_multiparty_computation(self.nodes, self.nodes[0].coin_toss())
+        common_toss = get_multiparty_computation(ouroboros_nodes, ouroboros_nodes[0].coin_toss())
         while common_toss < 0:
             call_count += 1
-            common_toss = get_multiparty_computation(self.nodes, self.nodes[0].coin_toss())
+            common_toss = get_multiparty_computation(ouroboros_nodes, ouroboros_nodes[0].coin_toss())
 
         if common_toss >= 0:
             # use the common toss to iteratively that number of times to produce a random number within the range of elector_tickets
             winning_ticket = 0
             for i in range(common_toss):
-                winning_ticket = random.randrange(len(self.elector_tickets))
+                winning_ticket = random.randrange(len(elector_tickets))
 
             # create a list of tokens, the greater the stake a node has the greater the number of tokens it has
-            print("Selected Leader is: " + self.elector_tickets[winning_ticket] + " Winning Ticket: " + str(winning_ticket))
+            print("Selected Leader is: " + elector_tickets[winning_ticket] + " Winning Ticket: " + str(winning_ticket))
             print("Block: " + block.data + " successfully mined, it took : " + str(call_count) + " toin cosses across all nodes.")
             self.add_block(block)
         else:
@@ -122,11 +109,33 @@ def create_some_blocks():
     while counter < 9:
         block = Block('SampleBlock_' + str(counter))
         #chain.mine(block)
-        chain.ouroboros_mint(block)
-        chain.tendermint_mint(block)
+        #chain.ouroboros_mint(block)
+        #chain.tendermint_mint(block)
         counter += 1
     return chain
 
+def start_ouroboros_algorithm():
+    chain = Blockchain()
+    nodes = bootstrap_ouroboros()
+    for i in range(10):
+        block = Block('OuroborosBlock_' + str(i))
+        chain.ouroboros_mint(block, nodes)
+    return chain
+
+def start():
+    algorithm = input(
+        "Select your Consensus Algorithm:\n 1. Ouroboros \n 2: Tendermint \n 3: Casper ")
+    try:
+        algorithm = int(algorithm)
+    except ValueError:
+        print("Invalid algorithm entered, quitting.")
+        exit()
+
+    if algorithm == 1:
+        return start_ouroboros_algorithm()
+    else:
+        print("Invalid hashing option selected, quitting.")
+        exit(-1)
 
 def validate_blocks(blockchain):
     valiator = ChainValidation()
@@ -134,7 +143,7 @@ def validate_blocks(blockchain):
     valiator.integrity_check(blockchain)
 
 start_time = time.time()
-the_blockchain = create_some_blocks()
+the_blockchain = start()
 validate_blocks(the_blockchain)
 the_blockchain.print_all_blocks()
 elapsed_time = time.time() - start_time

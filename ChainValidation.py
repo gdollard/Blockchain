@@ -9,6 +9,7 @@ class ChainValidation:
     def head_check(self, blockchain_to_check):
         blocks = blockchain_to_check.get_all_blocks()
         all_clear = True
+        print("")
         print("======= Checking All Block Links =======")
         for da_block in blocks:
             if da_block.get_next_block() is not None:
