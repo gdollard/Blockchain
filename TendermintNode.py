@@ -1,8 +1,8 @@
 from Block import Block
 
+
 # Author: Glenn Dollard
 class TendermintNode:
-
     stake = 0
     peer_nodes = None
     state = None
@@ -25,7 +25,6 @@ class TendermintNode:
         for node in nodes:
             if node != self:
                 self.peer_nodes.append(node)
-
 
     def validate_block(self, block, leader):
         self.leader = leader
@@ -106,20 +105,29 @@ class TendermintNode:
     def get_node_approval_threshold(self):
         return round(len(self.peer_nodes) * .66)
 
+    # This function marks the end of the rounds, it will be up to the leader to judge the result based on the voting states
+    # and the voter count.
     def should_block_be_added(self):
+        add_block = False
         if self.leader == self:
-            if len(self.committed_peers) >= self.get_node_approval_threshold():
+            if (len(self.committed_peers) / len(self.peer_nodes)) >= .66:
+                add_block = True
                 self.debug(
-                    "Comitter here, we have enough commits to add the block, broadcasting FINISHED state to all nodes.")
-                self.finish()
-                for node in self.peer_nodes:
-                    node.finish()
-                return True
+                    "Comitter here, we have enough commits (" + str(
+                        len(self.committed_peers)) + " from a total of " + str(len(
+                        self.peer_nodes)) + " peer nodes) to add the block, broadcasting FINISHED state to all nodes.")
             else:
-                return False
+                add_block = False
+                self.debug(
+                    "Comitter here, we DO NOT have enough commits (" + str(
+                        len(self.committed_peers)) + " from a total of " + str(len(
+                        self.peer_nodes)) + " peer nodes) to add the block, broadcasting FINISHED state to all nodes.")
+        self.finish()
+        for node in self.peer_nodes:
+            node.finish()
+        return add_block
 
 
     # Handy debugging to show the node ID
     def debug(self, message):
         print("[" + str(self.node_id) + "] " + message)
-
