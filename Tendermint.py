@@ -39,7 +39,7 @@ class Tendermint:
 
         # let the first node propose (for now)
         self.nodes[0].validate_block(block, leader)
-        #self.nodes[1].validate_block(block, leader)
+        self.nodes[1].validate_block(block, leader)
         self.nodes[2].validate_block(block, leader)
         self.nodes[3].validate_block(block, leader)
         self.nodes[4].validate_block(block, leader)
@@ -52,11 +52,11 @@ class Tendermint:
         self.nodes[0].pre_vote_block()
         self.nodes[1].pre_vote_block()
         self.nodes[2].pre_vote_block()
-        #self.nodes[3].pre_vote_block()
-        #self.nodes[4].pre_vote_block()
+        self.nodes[3].pre_vote_block()
+        self.nodes[4].pre_vote_block()
         self.nodes[5].pre_vote_block()
         self.nodes[6].pre_vote_block()
-        #self.nodes[7].pre_vote_block()
+        self.nodes[7].pre_vote_block()
         self.nodes[8].pre_vote_block()
         self.nodes[9].pre_vote_block()
 
