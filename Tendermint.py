@@ -10,7 +10,7 @@ class Tendermint:
 
     nodes = []
 
-    def initialise(self):
+    def bootstrap(self):
         # create some nodes
         node1 = TendermintNode(3, 111)
         node2 = TendermintNode(5, 222)
@@ -30,8 +30,7 @@ class Tendermint:
             node.register(self.nodes)
 
     # Kicks off the proposal
-    def begin(self):
-        block = Block('SampleTendermint Block')
+    def begin(self, block):
 
         # select the leader, this leader will be the one determining whether to add the block or not
         #randomly pick for now
@@ -83,13 +82,4 @@ class Tendermint:
         self.nodes[9].commit_block()
 
         # simulated end-of-rounds, get the result from the leader
-        should_add = leader.should_block_be_added()
-        if should_add:
-            print("Yes, add the block")
-        else:
-            print("Do Not add the block")
-
-
-tendermint = Tendermint()
-tendermint.initialise()
-tendermint.begin()
+        return leader.should_block_be_added()

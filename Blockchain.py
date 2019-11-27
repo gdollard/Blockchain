@@ -1,14 +1,15 @@
-from Block import Block
-from OuroborosNode import OuroborosNode
-from OuroborosMint import get_multiparty_computation
 import random
 import time
 
+from Block import Block
+from OuroborosNode import OuroborosNode
+from OuroborosMint import get_multiparty_computation
+from Tendermint import Tendermint
 from ChainValidation import ChainValidation
 
 
 # Author: G. Dollard
-# Distributed Ledger Technology - Lab 1
+# Distributed Ledger Technology - Assignment 2 - Part B
 
 class Blockchain:
     diff = 15;  # difficulty in mining
@@ -39,7 +40,7 @@ class Blockchain:
         self.block.next = block
         self.block = self.block.next
 
-    # Just delegating to add_block for now
+    # This is the original mine function from lab 4
     def mine(self, block):
         for n in range(self.maxNonce):
             if int(block.gen_hash(), 16) <= self.target:
@@ -49,7 +50,7 @@ class Blockchain:
             else:
                 block.nonce += 1
 
-    # This is the Ouroborous implementation of the mining/mint function
+    # # perform the mining using the Ouroborous implementation of the mining/mint function
     def ouroboros_mint(self, block):
         call_count = 1
         common_toss = get_multiparty_computation(self.nodes, self.nodes[0].coin_toss())
@@ -69,6 +70,16 @@ class Blockchain:
             self.add_block(block)
         else:
             print("No coin toss value agreeed..")
+
+    # perform the mining using the Tendermint implementation
+    def tendermint_mint(self, block):
+        tendermint = Tendermint()
+        tendermint.bootstrap()
+        should_add = tendermint.begin(block)
+        if should_add:
+            self.add_block(block)
+        else:
+            print("Tendermint did not come to a consensus, block not added.")
 
 
     # Utility function to print out all the blocks and their details
@@ -112,6 +123,7 @@ def create_some_blocks():
         block = Block('SampleBlock_' + str(counter))
         #chain.mine(block)
         chain.ouroboros_mint(block)
+        chain.tendermint_mint(block)
         counter += 1
     return chain
 
