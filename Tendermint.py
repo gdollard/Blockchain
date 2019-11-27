@@ -1,24 +1,11 @@
 from TendermintNode import TendermintNode
 from Block import Block
 import random
-# Tendermint is a mostly asynchronous, deterministic, BFT consensus where validators
-# have a stake which denotes their voting power.
-
-# if more than a third of the validators are malicious, instead of the network forking, the Tendermint blockchain
-# will simply come to a temporary halt until more 2 / 3rd validators come to a consensus.
-
-# Tendermint is also completely deterministic and there is no randomness in the protocol.
-# The leaders in the system are all elected in a deterministic version, via a defined mathematical function.
-
-# When a block gets >2/3 of the prevotes at (H,R) then it is called proof-of-lock-change or PoLC.
-
-#the states that each round goes through? NewHeight, Propose, Prevote, Precommit, and Commit.
-
-# Number of validators grows under a controlled manner. Starts at 100 and will increase by 13% each year for 10 years
-# when it will settle at 300.
 
 # REF https://blockgeeks.com/guides/tendermint/
 # REF https://tendermint.readthedocs.io/en/latest/introduction.html
+
+# Author: Glenn Dollard
 class Tendermint:
 
     nodes = []
@@ -52,7 +39,7 @@ class Tendermint:
 
         # let the first node propose (for now)
         self.nodes[0].validate_block(block, leader)
-        self.nodes[1].validate_block(block, leader)
+        #self.nodes[1].validate_block(block, leader)
         self.nodes[2].validate_block(block, leader)
         self.nodes[3].validate_block(block, leader)
         self.nodes[4].validate_block(block, leader)
@@ -65,11 +52,11 @@ class Tendermint:
         self.nodes[0].pre_vote_block()
         self.nodes[1].pre_vote_block()
         self.nodes[2].pre_vote_block()
-        self.nodes[3].pre_vote_block()
-        self.nodes[4].pre_vote_block()
+        #self.nodes[3].pre_vote_block()
+        #self.nodes[4].pre_vote_block()
         self.nodes[5].pre_vote_block()
         self.nodes[6].pre_vote_block()
-        self.nodes[7].pre_vote_block()
+        #self.nodes[7].pre_vote_block()
         self.nodes[8].pre_vote_block()
         self.nodes[9].pre_vote_block()
 
