@@ -21,7 +21,7 @@ class Casper:
             # quit the program if we have invalid data
             exit()
         for counter in range(num_nodes):
-            new_node = CasperNode(random.randrange(1, 101), "ouroboros_node_" + str(counter))
+            new_node = CasperNode(random.randrange(1, 101), "Casper_node_" + str(counter))
             self.nodes.append(new_node)
 
         for node in self.nodes:
@@ -30,8 +30,9 @@ class Casper:
     def get_tickets_for_nodes(self):
         tickets = []
         for node in self.nodes:
-            for index in range(node.stake):
-                tickets.append(node.id)
+            print("Node stake: ", node.stake)
+            for index in range(int(node.stake)):
+                tickets.append(node)
         return tickets
 
     # Kicks off the proposal
@@ -39,24 +40,20 @@ class Casper:
 
         # select the leader, this leader will be the one determining whether to add the block or not
         # Pick a proposer weighted on their stake
-        leader = random.randrange(len(self.get_tickets_for_nodes))
+        tickets_for_nodes = self.get_tickets_for_nodes()
+        random_leader_index = random.randrange(len(tickets_for_nodes))
+        leader = tickets_for_nodes[random_leader_index]
         block.bet_stake(leader.get_stake_to_bet())
-        # first commit the stake to the height, give the block a height
+
 
         # implement the functions below in the Casper Node
 
         # let the first node propose (for now)
         for node in self.nodes:
-            node.validate_block(block, leader)
+            node.prepare(block, leader)
 
         for node in self.nodes:
-            node.pre_vote_block()
-
-        for node in self.nodes:
-            node.pre_commit_block()
-
-        for node in self.nodes:
-            node.commit_block()
+            node.commit()
 
         # simulated end-of-rounds, get the result from the leader
         # if should be added then reward the leader with a fee proportional to their stake

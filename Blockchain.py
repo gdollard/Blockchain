@@ -33,7 +33,7 @@ class Blockchain:
             if int(block.gen_hash(), 16) <= self.target:
                 self.add_block(block)
                 print("Block " + block.data + " successfully mine. It took " + str(block.nonce) + " hashes to mine.")
-                break # break for now, until we have the mine function written
+                break  # break for now, until we have the mine function written
             else:
                 block.nonce += 1
 
@@ -54,7 +54,8 @@ class Blockchain:
 
             # create a list of tokens, the greater the stake a node has the greater the number of tokens it has
             print("Selected Leader is: " + elector_tickets[winning_ticket] + " Winning Ticket: " + str(winning_ticket))
-            print("Block: " + block.data + " successfully mined, it took : " + str(call_count) + " toin cosses across all nodes.")
+            print("Block: " + block.data + " successfully mined, it took : " + str(
+                call_count) + " toin cosses across all nodes.")
             self.add_block(block)
         else:
             print("No coin toss value agreeed..")
@@ -73,8 +74,6 @@ class Blockchain:
             self.add_block(block)
         else:
             print("Casper failed to come to a consensus, block not added.")
-
-
 
     # Utility function to print out all the blocks and their details
     def print_all_blocks(self):
@@ -118,19 +117,21 @@ def start_ouroboros_algorithm():
     elapsed_time = time.time() - start_time
     return (chain, elapsed_time)
 
+
 def start_tendermint_algorithm():
     chain = Blockchain()
-    tenderint = Tendermint()
-    tenderint.bootstrap_tendermint()
+    tendermint = Tendermint()
+    tendermint.bootstrap_tendermint()
     start_time = time.time()
     for i in range(10):
         block = Block('TendermintBlock_' + str(i))
-        chain.tendermint_mint(block, tenderint)
+        chain.tendermint_mint(block, tendermint)
     elapsed_time = time.time() - start_time
     return (chain, elapsed_time)
 
+
 def start_casper_algorithm():
-    chain = Blockchain
+    chain = Blockchain()
     casper = Casper()
     casper.bootstrap()
     start_time = time.time()
@@ -139,6 +140,7 @@ def start_casper_algorithm():
         chain.casper_mint(block, casper)
     elapsed_time = time.time() - start_time
     return (chain, elapsed_time)
+
 
 def start():
     print("Welcome, this will mine 10 blocks using one of the algorithms below, please enter required information: ")
@@ -159,6 +161,7 @@ def start():
     else:
         print("Invalid algorithm code entered, quitting.")
         exit(-1)
+
 
 def validate_blocks(blockchain):
     valiator = ChainValidation()

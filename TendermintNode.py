@@ -135,7 +135,6 @@ class TendermintNode:
             node.finish()
         return add_block
 
-
     # Handy debugging to show the node ID
     def debug(self, message):
-        print("[" + str(self.node_id) + "] " + message)
+        print("Tendermint::[" + str(self.node_id) + "] " + message)
