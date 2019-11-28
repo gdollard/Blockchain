@@ -4,7 +4,7 @@
 # Author: Glenn Dollard
 
 class CasperNode:
-    stake = 0;
+    stake = 0
     peer_nodes = None
     state = None
     prepared_count = 0
@@ -13,11 +13,15 @@ class CasperNode:
     leader = None
     block_to_add = None
     node_id = None
+    earned = 0
 
     def __init__(self, stake, id):
         self.stake = stake
         self.node_id = id
         self.peer_nodes = []
+        self.prepared_count = 0
+        self.committed_count = 0
+        self.earned = 0
 
     # offer half the stake
     def get_stake_to_bet(self):
@@ -80,6 +84,7 @@ class CasperNode:
         self.prepared_count = 0
         self.committed_count = 0
         self.committed_peers.clear()
+        self.earned = 0
 
 
     def get_node_approval_threshold(self):
@@ -107,8 +112,8 @@ class CasperNode:
     def collect_reward(self):
         if self.leader == self:
             stake_weighting = self.block_to_add.stake_placed / 2
-            self.stake += self.block_to_add.block_reward * stake_weighting
-            print("Yippee, I earned an award, stake is now: ", self.stake)
+            self.earned = self.block_to_add.block_reward * stake_weighting
+            print("Yippee, I earned an award, stake is now: ", self.earned)
 
 
     # Handy debugging to show the node ID
