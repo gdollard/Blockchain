@@ -39,6 +39,7 @@ class Blockchain:
 
     # # perform the mining using the Ouroborous implementation of the mining/mint function
     def ouroboros_mint(self, block, ouroboros_nodes):
+        start_time = time.time()
         elector_tickets = get_tickets_for_nodes(ouroboros_nodes)
         call_count = 1
         common_toss = get_multiparty_computation(ouroboros_nodes, ouroboros_nodes[0].coin_toss())
@@ -53,27 +54,39 @@ class Blockchain:
                 winning_ticket = random.randrange(len(elector_tickets))
 
             # create a list of tokens, the greater the stake a node has the greater the number of tokens it has
-            print("Selected Leader is: " + elector_tickets[winning_ticket] + " Winning Ticket: " + str(winning_ticket))
-            print("Block: " + block.data + " successfully mined, it took : " + str(
-                call_count) + " toin cosses across all nodes.")
+            #print("Selected Leader is: " + elector_tickets[winning_ticket] + " Winning Ticket: " + str(winning_ticket))
+            #print("Block: " + block.data + " successfully mined, it took : " + str(
+             #   call_count) + " toin cosses across all nodes.")
             self.add_block(block)
         else:
             print("No coin toss value agreeed..")
+        elapsed_time = time.time() - start_time
+        self.write_file("ouroboros.txt", block.data + ", " + str(elapsed_time))
 
     # perform the mining using the Tendermint implementation
     def tendermint_mint(self, block, tendermint_object):
+        start_time = time.time()
         should_add = tendermint_object.begin(block)
         if should_add:
             self.add_block(block)
         else:
             print("Tendermint failed to come to a consensus, block not added.")
+        elapsed_time = time.time() - start_time
+        self.write_file("tendermint.txt", block.data + ", " + str(elapsed_time))
 
     def casper_mint(self, block, casper_object):
+        start_time = time.time()
         should_add = casper_object.begin(block)
         if should_add:
             self.add_block(block)
         else:
             print("Casper failed to come to a consensus, block not added.")
+        elapsed_time = time.time() - start_time
+        self.write_file("casper.txt", block.data + ", " + str(elapsed_time))
+
+    def write_file(self, file_name, string):
+        file = open(file_name, "a")
+        file.write(string+"\n")
 
     # Utility function to print out all the blocks and their details
     def print_all_blocks(self):
@@ -107,35 +120,35 @@ class Blockchain:
         return blocks
 
 
-def start_ouroboros_algorithm():
+def start_ouroboros_algorithm(num_blocks):
     start_time = time.time()
     chain = Blockchain()
     nodes = bootstrap_ouroboros()
-    for i in range(10):
+    for i in range(num_blocks):
         block = Block('OuroborosBlock_' + str(i))
         chain.ouroboros_mint(block, nodes)
     elapsed_time = time.time() - start_time
     return (chain, elapsed_time)
 
 
-def start_tendermint_algorithm():
+def start_tendermint_algorithm(num_blocks):
     chain = Blockchain()
     tendermint = Tendermint()
     tendermint.bootstrap_tendermint()
     start_time = time.time()
-    for i in range(10):
+    for i in range(num_blocks):
         block = Block('TendermintBlock_' + str(i))
         chain.tendermint_mint(block, tendermint)
     elapsed_time = time.time() - start_time
     return (chain, elapsed_time)
 
 
-def start_casper_algorithm():
+def start_casper_algorithm(num_blocks):
     chain = Blockchain()
     casper = Casper()
     casper.bootstrap()
     start_time = time.time()
-    for i in range(10):
+    for i in range(num_blocks):
         block = Block('CasperBlock_' + str(i))
         chain.casper_mint(block, casper)
     elapsed_time = time.time() - start_time
@@ -143,6 +156,13 @@ def start_casper_algorithm():
 
 
 def start():
+    num_blocks = input("Enter the number of Blocks you want to mine: ")
+    try:
+        num_blocks = int(num_blocks)
+    except ValueError:
+        print("Invalid argument supplied, quitting.")
+        # quit the program if we have invalid data
+        exit()
     print("Welcome, this will mine 10 blocks using one of the algorithms below, please enter required information: ")
     algorithm = input(
         "Select your Consensus Algorithm:\n 1. Ouroboros \n 2: Tendermint \n 3: Casper ")
@@ -153,11 +173,11 @@ def start():
         exit()
 
     if algorithm == 1:
-        return start_ouroboros_algorithm()
+        return start_ouroboros_algorithm(num_blocks)
     if algorithm == 2:
-        return start_tendermint_algorithm()
+        return start_tendermint_algorithm(num_blocks)
     if algorithm == 3:
-        return start_casper_algorithm()
+        return start_casper_algorithm(num_blocks)
     else:
         print("Invalid algorithm code entered, quitting.")
         exit(-1)

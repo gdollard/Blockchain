@@ -18,4 +18,4 @@ class OuroborosNode:
     # the purpose of this is to randomly generate a number and keep going until all nodes produce the same number
     def coin_toss(self):
         # increase this range to increase the difficulty of forming a common coin toss across all nodes
-        return random.randrange(1, 5)
+        return random.randrange(1, 3)
