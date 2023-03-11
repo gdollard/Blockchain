@@ -1,4 +1,4 @@
-@library("shared-library") _
+@Library("shared-library") _
 // https://www.youtube.com/watch?v=TBtEXD062rA&ab_channel=KKJavaTutorials
 pipeline {
     agent any
